@@ -38,6 +38,10 @@ import java.util.List;
 import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    //TODO ADD code to ask for permission
+
+
     Button btnOnOff, btnDiscover, btnSend;
     ListView listView;
     TextView readMsgBox, connectionStatus;

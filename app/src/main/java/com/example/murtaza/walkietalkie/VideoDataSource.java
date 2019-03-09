@@ -3,10 +3,13 @@ package com.example.murtaza.walkietalkie;
 import android.media.MediaDataSource;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 import java.net.URL;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
@@ -25,16 +28,19 @@ public class VideoDataSource extends MediaDataSource {
             try{
 //                URL url = new URL(VIDEO_URL);
                 //Open the stream for the file.
-                InputStream inputStream = url.openStream();
+                Socket socket = SocketHandler.getSocket();
+                InputStream inputStream = socket.getInputStream();
                 //For appending incoming bytes
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 int read = 0;
                 while (read != -1){ //While there is more data
                     //Read in bytes to data buffer
                     read = inputStream.read();
+                    Log.e("FILE_READ", "READing from output stream");
                     //Write to output stream
                     byteArrayOutputStream.write(read);
                 }
+
                 inputStream.close();
 
                 //Flush and set buffer.
