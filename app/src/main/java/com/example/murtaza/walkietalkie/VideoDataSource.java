@@ -12,7 +12,7 @@ import java.net.URL;
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class VideoDataSource extends MediaDataSource {
 
-    public static String VIDEO_URL = "https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/fileSequence0.ts";
+//    public static String VIDEO_URL = "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_30mb.mp4";
     private volatile byte[] videoBuffer;
 
     private volatile VideoDownloadListener listener;
@@ -23,7 +23,7 @@ public class VideoDataSource extends MediaDataSource {
         @Override
         public void run() {
             try{
-                URL url = new URL(VIDEO_URL);
+//                URL url = new URL(VIDEO_URL);
                 //Open the stream for the file.
                 InputStream inputStream = url.openStream();
                 //For appending incoming bytes
