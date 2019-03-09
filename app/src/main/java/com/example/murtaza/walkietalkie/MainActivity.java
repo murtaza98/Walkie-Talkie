@@ -14,6 +14,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,6 +35,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button btnOnOff, btnDiscover, btnSend;
@@ -66,6 +70,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initialSetup();
         executeListeners();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menu_inflater = getMenuInflater();
+        menu_inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.stream) {
+            startActivity(new Intent(getApplicationContext(), StreamingActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public class ServerClass extends Thread{
