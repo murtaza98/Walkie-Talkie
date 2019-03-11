@@ -29,7 +29,7 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
 public class ChatWindow extends AppCompatActivity implements View.OnClickListener {
 
     Button send_btn;
-    static final String file_name = "/test.mp3";
+    static final String file_name = "/test.mp4";
     private static final int MESSAGE_READ = 1;
     SendReceive sendReceive;
     OutputStream outputStream;

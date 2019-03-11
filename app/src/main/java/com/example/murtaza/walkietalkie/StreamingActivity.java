@@ -1,6 +1,7 @@
 package com.example.murtaza.walkietalkie;
 
 import android.app.Activity;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ public class StreamingActivity extends Activity implements SurfaceHolder.Callbac
         SurfaceHolder holder = surfaceView.getHolder();
         holder.addCallback(this);
         mp = new MediaPlayer();
+        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
         isPaused = false;
     }
 
