@@ -44,15 +44,15 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
 
         Socket socket = SocketHandler.getSocket();
 
-        try {
-            outputStream = socket.getOutputStream();
-            Log.e("OUTPUT_SOCKET", "SUCCESS");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            outputStream = socket.getOutputStream();
+//            Log.e("OUTPUT_SOCKET", "SUCCESS");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-//        sendReceive = new SendReceive(socket);
-//        sendReceive.start();
+        sendReceive = new SendReceive(socket);
+        sendReceive.start();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
         SendReceive(Socket socket){
             this.socket = socket;
             try {
-//                this.inputStream = socket.getInputStream();
+                this.inputStream = socket.getInputStream();
                 this.outputStream = socket.getOutputStream();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -92,27 +92,24 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
             byte[] buffer = new byte[1024];
             int bytes_len;
 
-//            while (socket != null){
-////                try {
-//////                    bytes_len = inputStream.read(buffer);
-//////                    if(bytes_len > 0){
-//////                        handler.obtainMessage(MESSAGE_READ, bytes_len, -1, buffer).sendToTarget();
-//////                    }
-////                } catch (IOException e) {
-////                    e.printStackTrace();
-////                }
-//            }
+
+            while (socket != null){
+                try {
+                    bytes_len = inputStream.read(buffer);
+                    if(bytes_len > 0){
+//                        handler.obtainMessage(MESSAGE_READ, bytes_len, -1, buffer).sendToTarget();
+                        Log.e("FILE_PATH", "Data transfered "+bytes_len);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         public void write(byte[] messageBytes){
             try {
                 outputStream.write(messageBytes);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "Write on Output stream complete", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                Log.e("FILE_PATH", "Write on Output stream complete");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -136,21 +133,22 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
 
             Log.e("FILE_READ", "File read complete");
 
+            sendReceive.write(bytes);
 
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        outputStream.write(bytes);
-                        Log.e("FILE_READ", "Output stream write complete");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            });
-            thread.start();
+//            Thread thread = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        outputStream.write(bytes);
+//                        Log.e("FILE_READ", "Output stream write complete");
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    } catch (Exception e){
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//            thread.start();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             Log.e("FILE_READ", e.getMessage());
