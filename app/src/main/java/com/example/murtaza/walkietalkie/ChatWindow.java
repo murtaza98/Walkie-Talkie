@@ -44,15 +44,15 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
 
         Socket socket = SocketHandler.getSocket();
 
-//        try {
-//            outputStream = socket.getOutputStream();
-//            Log.e("OUTPUT_SOCKET", "SUCCESS");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            outputStream = socket.getOutputStream();
+            Log.e("OUTPUT_SOCKET", "SUCCESS");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        sendReceive = new SendReceive(socket);
-        sendReceive.start();
+//        sendReceive = new SendReceive(socket);
+//        sendReceive.start();
     }
 
     @Override
@@ -133,22 +133,22 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
 
             Log.e("FILE_READ", "File read complete");
 
-            sendReceive.write(bytes);
+//            sendReceive.write(bytes);
 
-//            Thread thread = new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        outputStream.write(bytes);
-//                        Log.e("FILE_READ", "Output stream write complete");
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    } catch (Exception e){
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
-//            thread.start();
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        outputStream.write(bytes);
+                        Log.e("FILE_READ", "Output stream write complete");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             Log.e("FILE_READ", e.getMessage());
