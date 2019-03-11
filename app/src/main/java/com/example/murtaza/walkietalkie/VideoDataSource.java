@@ -31,14 +31,23 @@ public class VideoDataSource extends MediaDataSource {
                 Socket socket = SocketHandler.getSocket();
                 InputStream inputStream = socket.getInputStream();
                 //For appending incoming bytes
+                int count = 0;
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 int read = 0;
                 while (read != -1){ //While there is more data
                     //Read in bytes to data buffer
                     read = inputStream.read();
+                    count ++;
                     Log.e("FILE_READ", "READing from output stream");
                     //Write to output stream
                     byteArrayOutputStream.write(read);
+                    if (count > 10240 || read == -1){
+                        byteArrayOutputStream.flush();
+                        videoBuffer = byteArrayOutputStream.toByteArray();
+                        listener.onVideoDownloaded();
+                        count = 0;
+                    }
+
                 }
 
                 inputStream.close();
@@ -48,7 +57,7 @@ public class VideoDataSource extends MediaDataSource {
                 videoBuffer = byteArrayOutputStream.toByteArray();
 
                 byteArrayOutputStream.close();
-                listener.onVideoDownloaded();
+//                listener.onVideoDownloaded();
             }catch (Exception e){
                 listener.onVideoDownloadError(e);
             }finally {
