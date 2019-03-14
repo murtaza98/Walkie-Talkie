@@ -47,6 +47,8 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
         try {
             outputStream = socket.getOutputStream();
             Log.e("OUTPUT_SOCKET", "SUCCESS");
+            startService(new Intent(getApplicationContext(), AudioStreamingService.class));
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -68,8 +70,7 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
         int id = item.getItemId();
         if(id == R.id.stream_btn) {
 //            startActivity(new Intent(getApplicationContext(), StreamingActivity.class));
-            startService(new Intent(getApplicationContext(), AudioStreamingService.class));
-            Toast.makeText(getApplicationContext(), "streaming", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "probably already streaming", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
