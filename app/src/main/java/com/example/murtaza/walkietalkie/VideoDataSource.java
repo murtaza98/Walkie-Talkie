@@ -16,7 +16,7 @@ import java.net.URL;
 public class VideoDataSource extends MediaDataSource {
 
 //    public static String VIDEO_URL = "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_30mb.mp4";
-    private volatile byte[] videoBuffer = new byte[32000000];
+    private volatile byte[] videoBuffer = new byte[40000000];
 
     private volatile VideoDownloadListener listener;
     private volatile  boolean isDownloading;
@@ -35,7 +35,7 @@ public class VideoDataSource extends MediaDataSource {
                 int count = 0;
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 int read = 0;
-                int x = 512000;
+                int x = 1048576;
                 boolean flag = true;
                 while (read != -1){ //While there is more data
                     //Read in bytes to data buffer

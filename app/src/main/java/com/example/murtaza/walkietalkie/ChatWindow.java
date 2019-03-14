@@ -29,7 +29,7 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
 public class ChatWindow extends AppCompatActivity implements View.OnClickListener {
 
     Button send_btn;
-    static final String file_name = "/test.mp4";
+    static final String file_name = "/test.mp3";
     private static final int MESSAGE_READ = 1;
     SendReceive sendReceive;
     OutputStream outputStream;
@@ -47,6 +47,7 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
         try {
             outputStream = socket.getOutputStream();
             Log.e("OUTPUT_SOCKET", "SUCCESS");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,7 +67,9 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.stream_btn) {
-            startActivity(new Intent(getApplicationContext(), StreamingActivity.class));
+//            startActivity(new Intent(getApplicationContext(), StreamingActivity.class));
+            startService(new Intent(getApplicationContext(), AudioStreamingService.class));
+            Toast.makeText(getApplicationContext(), "streaming", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
