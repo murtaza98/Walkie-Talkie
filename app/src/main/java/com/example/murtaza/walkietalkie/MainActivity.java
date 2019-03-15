@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     WifiP2pManager mManager;
     WifiP2pManager.Channel mChannel;
 
-    public static final int PORT_USED = 12345;
+    public static final int PORT_USED = 12343;
 
     BroadcastReceiver mReceiver;
     IntentFilter mIntentFilter;
