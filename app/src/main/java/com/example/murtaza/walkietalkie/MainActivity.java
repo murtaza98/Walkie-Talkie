@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -302,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peersList) {
+            Log.e("DEVICE_NAME", "Listener called"+peersList.getDeviceList().size());
             if(!peersList.getDeviceList().equals(peers)){
                 peers.clear();
                 peers.addAll(peersList.getDeviceList());
@@ -312,6 +314,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int index=0;
                 for(WifiP2pDevice device : peersList.getDeviceList()){
                     deviceNameArray[index] = device.deviceName;
+                    Log.e("DEVICE_NAME", device.deviceName);
                     deviceArray[index] = device;
                     index++;
                 }
