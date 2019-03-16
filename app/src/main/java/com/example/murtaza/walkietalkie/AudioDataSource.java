@@ -4,25 +4,23 @@ import android.media.MediaDataSource;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.net.URL;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class VideoDataSource extends MediaDataSource {
+public class AudioDataSource extends MediaDataSource {
 
 //    public static String VIDEO_URL = "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_30mb.mp4";
-    private volatile byte[] videoBuffer = new byte[40000000];
+    private volatile byte[] audioBuffer = new byte[40000000];
 
-    private volatile VideoDownloadListener listener;
+    private volatile AudioBufferedListener listener;
     private volatile  boolean isDownloading;
 
 
-    Runnable downloadVideoRunnable = new Runnable() {
+    Runnable streamAudioRunnable = new Runnable() {
         @Override
         public void run() {
             try{
@@ -50,12 +48,12 @@ public class VideoDataSource extends MediaDataSource {
                         byteArrayOutputStream.flush();
                         byte[] temp = byteArrayOutputStream.toByteArray();
                         byteArrayOutputStream.reset();
-                        System.arraycopy(temp, 0, videoBuffer, curr_len, temp.length);
+                        System.arraycopy(temp, 0, audioBuffer, curr_len, temp.length);
                         curr_len += temp.length;
                         Log.d("buffer", "flushed data "+curr_len);
                         if (flag) {
                             flag = false;
-                            listener.onVideoDownloaded();
+                            listener.onAudioBuffered();
                         }
                         count = 0;
                     }
@@ -64,35 +62,35 @@ public class VideoDataSource extends MediaDataSource {
 
                 //Flush and set buffer.
                 byteArrayOutputStream.flush();
-                videoBuffer = byteArrayOutputStream.toByteArray();
+                audioBuffer = byteArrayOutputStream.toByteArray();
 
                 byteArrayOutputStream.close();
-//                listener.onVideoDownloaded();
+//                listener.onAudioBuffered();
             }catch (Exception e){
-                listener.onVideoDownloadError(e);
+                listener.onAudioBufferedError(e);
             }finally {
                 isDownloading = false;
             }
         }
     };
 
-    public VideoDataSource(){
+    public AudioDataSource(){
         isDownloading = false;
     }
 
-    public void downloadVideo(VideoDownloadListener videoDownloadListener){
+    public void downloadVideo(AudioBufferedListener audioBufferedListener){
         if(isDownloading)
             return;
-        listener = videoDownloadListener;
-        Thread downloadThread = new Thread(downloadVideoRunnable);
+        listener = audioBufferedListener;
+        Thread downloadThread = new Thread(streamAudioRunnable);
         downloadThread.start();
         isDownloading = true;
     }
 
     @Override
     public synchronized int readAt(long position, byte[] buffer, int offset, int size) throws IOException {
-        synchronized (videoBuffer){
-            int length = videoBuffer.length;
+        synchronized (audioBuffer){
+            int length = audioBuffer.length;
             Log.d("buffer", "position: "+position);
             Log.d("buffer", "size: "+size);
             if (position >= length) {
@@ -102,7 +100,7 @@ public class VideoDataSource extends MediaDataSource {
             if (position + size > length) {
                 size -= (position + size) - length;
             }
-            System.arraycopy(videoBuffer, (int)position, buffer, offset, size);
+            System.arraycopy(audioBuffer, (int)position, buffer, offset, size);
             return size;
         }
     }
@@ -116,5 +114,4 @@ public class VideoDataSource extends MediaDataSource {
     public synchronized void close() throws IOException {
 
     }
-
 }

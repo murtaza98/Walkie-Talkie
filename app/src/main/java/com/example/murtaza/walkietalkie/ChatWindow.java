@@ -31,7 +31,9 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
     Button send_btn;
     static final String file_name = "/test.mp3";
     private static final int MESSAGE_READ = 1;
-    SendReceive sendReceive;
+    private static boolean isRecording = false;
+    private MicRecorder micRecorder;
+//    SendReceive sendReceive;
     OutputStream outputStream;
 
     @Override
@@ -58,7 +60,7 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
 //        sendReceive.start();
     }
 
-    @Override
+/*    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menu_inflater = getMenuInflater();
         menu_inflater.inflate(R.menu.chat_menu, menu);
@@ -73,9 +75,9 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
-    private class SendReceive extends Thread{
+/*    private class SendReceive extends Thread{
         private Socket socket;
         private InputStream inputStream;
         private OutputStream outputStream;
@@ -117,12 +119,11 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
-    void sendFile(){
+    /*void sendFile(){
         String internal_storage_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         String full_file_path = internal_storage_path + file_name;
-//        Toast.makeText(getApplicationContext(), full_file_path, Toast.LENGTH_SHORT).show();
         Log.e("FILE_PATH", full_file_path);
         File file = new File(full_file_path);
         int size = (int) file.length();
@@ -168,16 +169,25 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
 
 
     }
-
+*/
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.send_file_btn:
-                Toast.makeText(getApplicationContext(), "Button Clicked", Toast.LENGTH_SHORT).show();
-                sendFile();
+                micRecorder = new MicRecorder();
+                Thread t = new Thread(micRecorder);
+                t.start();
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(micRecorder != null) {
+            MicRecorder.keepRecording = false;
         }
     }
 }

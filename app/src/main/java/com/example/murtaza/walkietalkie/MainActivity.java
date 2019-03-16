@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //TODO ADD code to ask for permission
 
-
     Button btnDiscover;
     ListView listView;
     TextView connectionStatus;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     WifiP2pManager mManager;
     WifiP2pManager.Channel mChannel;
 
-    public static final int PORT_USED = 12343;
+    public static final int PORT_USED = 9584;
 
     BroadcastReceiver mReceiver;
     IntentFilter mIntentFilter;
