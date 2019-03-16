@@ -69,7 +69,6 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.stream_btn) {
-//            startActivity(new Intent(getApplicationContext(), StreamingActivity.class));
             Toast.makeText(getApplicationContext(), "probably already streaming", Toast.LENGTH_SHORT).show();
         }
 
