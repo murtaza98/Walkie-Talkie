@@ -47,10 +47,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //TODO ADD code to ask for permission
 
 
-    Button btnOnOff, btnDiscover, btnSend;
+    Button btnDiscover;
     ListView listView;
-    TextView readMsgBox, connectionStatus;
-    EditText writeMsg;
+    TextView connectionStatus;
 
     WifiManager wifiManager;
     WifiP2pManager mManager;
@@ -69,7 +68,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ServerClass serverClass;
     ClientClass clientClass;
-    SendReceive sendReceive;
+
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,16 +85,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menu_inflater = getMenuInflater();
         menu_inflater.inflate(R.menu.main_menu, menu);
+        this.menu = menu;
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.stream) {
-            startActivity(new Intent(getApplicationContext(), StreamingActivity.class));
+        if(id == R.id.wifi_toggle) {
+            toggleWifiState();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -152,61 +152,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private class SendReceive extends Thread{
-        private Socket socket;
-        private InputStream inputStream;
-        private OutputStream outputStream;
-
-        public SendReceive(Socket socket){
-            this.socket = socket;
-            try {
-                this.inputStream = socket.getInputStream();
-                this.outputStream = socket.getOutputStream();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void run() {
-            byte[] buffer = new byte[1024];
-            int bytes_len;
-
-            while (socket != null){
-                try {
-                    bytes_len = inputStream.read(buffer);
-                    if(bytes_len > 0){
-                        handler.obtainMessage(MESSAGE_READ, bytes_len, -1, buffer).sendToTarget();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public void write(byte[] messageBytes){
-            try {
-                outputStream.write(messageBytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what){
-                case MESSAGE_READ:
-                    byte[] readBuff = (byte[]) msg.obj;
-                    String tempMessage = new String(readBuff, 0, msg.arg1);
-                    readMsgBox.append("\n"+tempMessage);
-                    break;
-            }
-            return true;
-        }
-    });
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -221,18 +166,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initialSetup() {
         // layout files
-        btnOnOff = (Button) findViewById(R.id.onOff);
         btnDiscover = (Button) findViewById(R.id.discover);
-        btnSend = (Button) findViewById(R.id.sendButton);
         listView = (ListView) findViewById(R.id.peerListView);
-        readMsgBox = (TextView) findViewById(R.id.readMsg);
         connectionStatus = (TextView) findViewById(R.id.connectionStatus);
-        writeMsg = (EditText) findViewById(R.id.writeMsg);
 
         // add onClick Listeners
-        btnOnOff.setOnClickListener(this);
         btnDiscover.setOnClickListener(this);
-        btnSend.setOnClickListener(this);
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -302,19 +241,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.onOff:
-                checkWifiState();
-                break;
             case R.id.discover:
                 checkLocationEnabled();
                 discoverDevices();
-                break;
-            case R.id.sendButton:
-                if(sendReceive == null)
-                    return;
-                // send the message
-                String msg = writeMsg.getText().toString();
-                sendReceive.write(msg.getBytes());
                 break;
         }
     }
@@ -381,13 +310,68 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    private void checkWifiState() {
+    private void toggleWifiState() {
         if(wifiManager.isWifiEnabled()){
             wifiManager.setWifiEnabled(false);
-            btnOnOff.setText("ON");
+            menu.findItem(R.id.wifi_toggle).setTitle("Turn Wifi On");
         }else{
             wifiManager.setWifiEnabled(true);
-            btnOnOff.setText("OFF");
+            menu.findItem(R.id.wifi_toggle).setTitle("Turn Wifi Off");
         }
     }
+
+    //    private class SendReceive extends Thread{
+//        private Socket socket;
+//        private InputStream inputStream;
+//        private OutputStream outputStream;
+//
+//        public SendReceive(Socket socket){
+//            this.socket = socket;
+//            try {
+//                this.inputStream = socket.getInputStream();
+//                this.outputStream = socket.getOutputStream();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        @Override
+//        public void run() {
+//            byte[] buffer = new byte[1024];
+//            int bytes_len;
+//
+//            while (socket != null){
+//                try {
+//                    bytes_len = inputStream.read(buffer);
+//                    if(bytes_len > 0){
+////                        handler.obtainMessage(MESSAGE_READ, bytes_len, -1, buffer).sendToTarget();
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//
+//        public void write(byte[] messageBytes){
+//            try {
+//                outputStream.write(messageBytes);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+
+//    Handler handler = new Handler(new Handler.Callback() {
+//        @Override
+//        public boolean handleMessage(Message msg) {
+//            switch (msg.what){
+//                case MESSAGE_READ:
+//                    byte[] readBuff = (byte[]) msg.obj;
+//                    String tempMessage = new String(readBuff, 0, msg.arg1);
+//                    readMsgBox.append("\n"+tempMessage);
+//                    break;
+//            }
+//            return true;
+//        }
+//    });
 }
