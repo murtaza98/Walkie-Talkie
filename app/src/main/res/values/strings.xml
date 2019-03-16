@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Walkie Talkie</string>
+    <string name="gps_network_not_enabled">Kindly Enable GPS to continue</string>
+    <string name="open_location_settings">Goto Location Settings</string>
+    <string name="Cancel">Cancel</string>
+    <string name="gps_network_not_enabled_title">GPS Disabled</string>
 </resources>
