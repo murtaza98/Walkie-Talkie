@@ -20,7 +20,7 @@ public class MicRecorder implements Runnable {
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT);
 
-        Log.d("AUDIO", "buffersize = "+bufferSize);
+        Log.e("AUDIO", "buffersize = "+bufferSize);
 
         if (bufferSize == AudioRecord.ERROR || bufferSize == AudioRecord.ERROR_BAD_VALUE) {
             bufferSize = SAMPLE_RATE * 2;
@@ -31,18 +31,18 @@ public class MicRecorder implements Runnable {
 
             final byte[] audioBuffer = new byte[bufferSize];
 
-            AudioRecord record = new AudioRecord(MediaRecorder.AudioSource.MIC,
+            AudioRecord record = new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION,
                     SAMPLE_RATE,
                     AudioFormat.CHANNEL_IN_MONO,
                     AudioFormat.ENCODING_PCM_16BIT,
                     bufferSize);
 
             if (record.getState() != AudioRecord.STATE_INITIALIZED) {
-                Log.d("AUDIO", "Audio Record can't initialize!");
+                Log.e("AUDIO", "Audio Record can't initialize!");
                 return;
             }
             record.startRecording();
-            Log.d("AUDIO", "STARTED RECORDING");
+            Log.e("AUDIO", "STARTED RECORDING");
 
             while(keepRecording) {
                 int numberOfBytes = record.read(audioBuffer, 0, audioBuffer.length);
@@ -63,7 +63,8 @@ public class MicRecorder implements Runnable {
 
             record.stop();
             record.release();
-            outputStream.close();
+            Log.e("AUDIO", "Streaming stopped");
+//            outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

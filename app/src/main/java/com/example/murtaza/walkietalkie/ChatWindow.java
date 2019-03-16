@@ -34,6 +34,7 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
     private MicRecorder micRecorder;
 //    SendReceive sendReceive;
     OutputStream outputStream;
+    Thread t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +61,25 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.send_file_btn:
-                micRecorder = new MicRecorder();
-                Thread t = new Thread(micRecorder);
-                t.start();
+                if(send_btn.getText().toString().equals("TALK")){
+                    // stream audio
+                    send_btn.setText("OVER");
+                    micRecorder = new MicRecorder();
+                    t = new Thread(micRecorder);
+                    if(micRecorder != null) {
+                        MicRecorder.keepRecording = true;
+                    }
+                    t.start();
+                }else if(send_btn.getText().toString().equals("OVER")){
+                    send_btn.setText("TALK");
+                    if(micRecorder != null) {
+                        MicRecorder.keepRecording = false;
+//                        if(t.isAlive()){
+//                            t.stop();
+//                        }
+                    }
+                }
+
                 break;
             default:
                 break;
