@@ -1,11 +1,13 @@
 package com.example.murtaza.walkietalkie;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
@@ -17,6 +19,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -43,6 +47,8 @@ import java.util.List;
 import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+    private static final int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 2;
 
     //TODO ADD code to ask for permission
 
@@ -74,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate  (savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getPermissions();
         initialSetup();
         executeListeners();
 
@@ -319,58 +325,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    //    private class SendReceive extends Thread{
-//        private Socket socket;
-//        private InputStream inputStream;
-//        private OutputStream outputStream;
-//
-//        public SendReceive(Socket socket){
-//            this.socket = socket;
-//            try {
-//                this.inputStream = socket.getInputStream();
-//                this.outputStream = socket.getOutputStream();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        @Override
-//        public void run() {
-//            byte[] buffer = new byte[1024];
-//            int bytes_len;
-//
-//            while (socket != null){
-//                try {
-//                    bytes_len = inputStream.read(buffer);
-//                    if(bytes_len > 0){
-////                        handler.obtainMessage(MESSAGE_READ, bytes_len, -1, buffer).sendToTarget();
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//
-//        public void write(byte[] messageBytes){
-//            try {
-//                outputStream.write(messageBytes);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    public void getPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+        }
 
-//    Handler handler = new Handler(new Handler.Callback() {
-//        @Override
-//        public boolean handleMessage(Message msg) {
-//            switch (msg.what){
-//                case MESSAGE_READ:
-//                    byte[] readBuff = (byte[]) msg.obj;
-//                    String tempMessage = new String(readBuff, 0, msg.arg1);
-//                    readMsgBox.append("\n"+tempMessage);
-//                    break;
-//            }
-//            return true;
-//        }
-//    });
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
+        }
+    }
 }
