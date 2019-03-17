@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class MicRecorder implements Runnable {
-    private static final int SAMPLE_RATE = 16000;
+    private static final int SAMPLE_RATE = 44100;
     public static volatile boolean keepRecording = true;
 
     @Override

@@ -17,8 +17,9 @@ import java.io.InputStream;
 import java.net.Socket;
 
 public class AudioStreamingService extends Service {
-    private static final int SAMPLE_RATE = 16000;
+    private static final int SAMPLE_RATE = 44100;
     public boolean keepPlaying = true;
+    private InputStream inputStream;
     private AudioTrack audioTrack;
     byte[] buffer;
 
@@ -76,14 +77,22 @@ public class AudioStreamingService extends Service {
                 int offset = 0;
 
                 try {
-                    InputStream inputStream = SocketHandler.getSocket().getInputStream();
-
-                    while(keepPlaying) {
-                        inputStream.read(buffer, 0, bufferSize);
+                    inputStream = SocketHandler.getSocket().getInputStream();
+                    int bytes_read = 0;
+                    bytes_read = inputStream.read(buffer, 0, bufferSize);
+                    while(keepPlaying && (bytes_read != -1)) {
                         audioTrack.write(buffer, 0,buffer.length);
-                        Log.d("audio", "writing");
+                        bytes_read = inputStream.read(buffer, 0, bufferSize);
                     }
+                    if(bytes_read == -1)
+                        inputStream.close();
+
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
+                    keepPlaying = false;
+                    if(audioTrack != null)
+                        audioTrack.release();
                     e.printStackTrace();
                 }
             }
