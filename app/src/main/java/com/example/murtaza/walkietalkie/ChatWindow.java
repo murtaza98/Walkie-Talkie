@@ -1,30 +1,15 @@
 package com.example.murtaza.walkietalkie;
 
-import android.animation.TimeAnimator;
 import android.content.Intent;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-
-import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class ChatWindow extends AppCompatActivity implements View.OnClickListener {
 

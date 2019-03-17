@@ -5,16 +5,13 @@ import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Socket;
 
 public class AudioStreamingService extends Service {
     private static final int SAMPLE_RATE = 16000;
