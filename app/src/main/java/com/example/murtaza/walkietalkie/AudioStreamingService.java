@@ -22,9 +22,6 @@ public class AudioStreamingService extends Service {
     private AudioTrack audioTrack;
     byte[] buffer;
 
-    public AudioStreamingService() {
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
@@ -77,13 +74,18 @@ public class AudioStreamingService extends Service {
 
                 try {
                     InputStream inputStream = SocketHandler.getSocket().getInputStream();
+                    int bytes_read = inputStream.read(buffer, 0, bufferSize);
 
-                    while(keepPlaying) {
-                        inputStream.read(buffer, 0, bufferSize);
+                    while(keepPlaying && (bytes_read != -1)) {
                         audioTrack.write(buffer, 0,buffer.length);
-                        Log.d("audio", "writing");
+                        bytes_read = inputStream.read(buffer, 0, bufferSize);
                     }
+
+                    inputStream.close();
+                    audioTrack.release();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
