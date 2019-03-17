@@ -63,8 +63,8 @@ public class MicRecorder implements Runnable {
 
             record.stop();
             record.release();
-            Log.e("AUDIO", "Streaming stopped");
 //            outputStream.close();
+            Log.e("AUDIO", "Streaming stopped");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -116,13 +116,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SocketHandler.setSocket(socket);
 
                 startActivity(new Intent(getApplicationContext(), ChatWindow.class));
-
-
-
-                // start the sendReceive class
-//                Toast.makeText(getApplicationContext(), "Send Revieve started", Toast.LENGTH_SHORT).show();
-//                sendReceive = new SendReceive(socket);
-//                sendReceive.start();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -146,11 +139,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SocketHandler.setSocket(socket);
 
                 startActivity(new Intent(getApplicationContext(), ChatWindow.class));
-
-                // start the sendReceive class
-//                Toast.makeText(getApplicationContext(), "Send Revieve started", Toast.LENGTH_SHORT).show();
-//                sendReceive = new SendReceive(socket);
-//                sendReceive.start();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -303,12 +291,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if(info.groupFormed && info.isGroupOwner){
                 connectionStatus.setText("HOST");
-//                Toast.makeText(getApplicationContext(), "Server class started", Toast.LENGTH_SHORT).show();
                 serverClass = new ServerClass();
                 serverClass.start();
             }else if(info.groupFormed){
                 connectionStatus.setText("CLIENT");
-//                Toast.makeText(getApplicationContext(), "Client class started", Toast.LENGTH_SHORT).show();
                 clientClass = new ClientClass(groupOwnerAddress);
                 clientClass.start();
             }

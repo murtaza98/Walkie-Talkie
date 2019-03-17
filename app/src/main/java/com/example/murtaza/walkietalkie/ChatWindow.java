@@ -32,7 +32,6 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
     private static final int MESSAGE_READ = 1;
     private static boolean isRecording = false;
     private MicRecorder micRecorder;
-//    SendReceive sendReceive;
     OutputStream outputStream;
     Thread t;
 
@@ -74,9 +73,6 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
                     send_btn.setText("TALK");
                     if(micRecorder != null) {
                         MicRecorder.keepRecording = false;
-//                        if(t.isAlive()){
-//                            t.stop();
-//                        }
                     }
                 }
 
