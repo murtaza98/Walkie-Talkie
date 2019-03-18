@@ -43,6 +43,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
     private static final int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 2;
+    private static final int MY_PERMISSIONS_REQUEST_REQUIRED_PERMISSION = 3;
 
     //TODO ADD code to ask for permission
 
@@ -306,20 +307,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void getPermissions() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-        }
-
-        if (ContextCompat.checkSelfPermission(this,
+        if ((ContextCompat.checkSelfPermission(this,
                 Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED)
+                || (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.RECORD_AUDIO},
-                    MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
+                    new String[]{Manifest.permission.RECORD_AUDIO,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                    },
+                    MY_PERMISSIONS_REQUEST_REQUIRED_PERMISSION);
         }
     }
 }
