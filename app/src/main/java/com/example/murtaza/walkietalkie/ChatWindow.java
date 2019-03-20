@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.skyfishjy.library.RippleBackground;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -16,6 +18,7 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
     Button send_btn;
     private static final int MESSAGE_READ = 1;
     private static boolean isRecording = false;
+    private RippleBackground rippleBackground;
     private MicRecorder micRecorder;
     OutputStream outputStream;
     Thread t;
@@ -27,6 +30,8 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
 
         send_btn = (Button)findViewById(R.id.send_file_btn);
         send_btn.setOnClickListener(this);
+
+        rippleBackground = (RippleBackground) findViewById(R.id.content);
 
         Socket socket = SocketHandler.getSocket();
 
@@ -54,11 +59,18 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
                         MicRecorder.keepRecording = true;
                     }
                     t.start();
+
+                    // start animation
+                    rippleBackground.startRippleAnimation();
+
                 }else if(send_btn.getText().toString().equals("OVER")){
                     send_btn.setText("TALK");
                     if(micRecorder != null) {
                         MicRecorder.keepRecording = false;
                     }
+
+                    // stop animation
+                    rippleBackground.stopRippleAnimation();
                 }
 
                 break;
