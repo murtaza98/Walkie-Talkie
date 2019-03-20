@@ -32,10 +32,20 @@ public class mainpage_ui_test extends AppCompatActivity {
         final Handler handler=new Handler();
 
         final View device1 = LayoutInflater.from(this).inflate(R.layout.device_icon, null);
-//        device1.setLayoutParams(new LinearLayout.LayoutParams(
-//                64,
-//                64));
+        RippleBackground.LayoutParams params = new RippleBackground.LayoutParams(400,400);
+        params.setMargins((int)(Math.random() * 800), (int)(Math.random() * 1000), 0, 0);
+        device1.setLayoutParams(params);
+        TextView txt_device1 = device1.findViewById(R.id.myImageViewText);
+        txt_device1.setText("new hjghj bjk device1");
         rippleBackground.addView(device1);
+
+        final View device2 = LayoutInflater.from(this).inflate(R.layout.device_icon, null);
+        params = new RippleBackground.LayoutParams(400,400);
+        params.setMargins((int)(Math.random() * 800), (int)(Math.random() * 1000), 0,0);
+        device2.setLayoutParams(params);
+        TextView txt_device2 = device2.findViewById(R.id.myImageViewText);
+        txt_device2.setText("new hjghj bjk device2 njjk njknk njklnk");
+        rippleBackground.addView(device2);
 
 //        final TextView device1 = new TextView(this);
 //        RippleBackground.LayoutParams params = new RippleBackground.LayoutParams(180,180);
@@ -53,7 +63,7 @@ public class mainpage_ui_test extends AppCompatActivity {
 ////                64));
 //        rippleBackground.addView(device2);
 
-        final View[] device_array = {device1};
+        final View[] device_array = {device1, device2};
 
 //        foundDevice=(ImageView)findViewById(R.id.foundDevice);
         ImageView button=(ImageView)findViewById(R.id.centerImage);
@@ -64,10 +74,10 @@ public class mainpage_ui_test extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-//                        int index = count % device_array.length;
-//                        foundDevice(device_array[index]);
-//                        count++;
-                        foundDevice(device1);
+                        int index = count % device_array.length;
+                        foundDevice(device_array[index]);
+                        count++;
+//                        foundDevice(device1);
                     }
                 },1000);
             }
