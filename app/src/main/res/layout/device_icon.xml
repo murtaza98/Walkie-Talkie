@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<TextView-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="64dp"-->
+    <!--android:layout_height="64dp"-->
+    <!--android:text="Lenovo K8 Note"-->
+    <!--android:gravity="bottom|center_horizontal"-->
+    <!--style="@style/Base.TextAppearance.AppCompat.Medium"-->
+    <!--android:textStyle="bold"-->
+    <!--android:visibility="invisible"-->
+    <!--android:background="@drawable/phone2"/>-->
+<ImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    android:id="@+id/foundDevice"
+    android:layout_above="@id/centerImage"
+    android:layout_marginBottom="32dp"
+    android:layout_toLeftOf="@id/centerImage"
+    android:layout_marginRight="6dp"
+    android:src="@drawable/phone2"
+    android:visibility="invisible"/>
