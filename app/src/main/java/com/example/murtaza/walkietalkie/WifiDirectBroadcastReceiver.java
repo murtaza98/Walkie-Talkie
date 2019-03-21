@@ -45,6 +45,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                 mManager.requestConnectionInfo(mChannel, mActivity.connectionInfoListener);
             } else {
                 mActivity.connectionStatus.setText("Device Disconnected");
+                mActivity.clear_all_device_icons();
                 mActivity.rippleBackground.stopRippleAnimation();
             }
 
