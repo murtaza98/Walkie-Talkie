@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:orientation="vertical">
+    <ImageView
+        android:id="@+id/myImageView"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/phone2" />
+
+    <TextView
+        android:id="@+id/myImageViewText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        style="@style/Base.TextAppearance.AppCompat.Medium"
+        android:text="Hello"
+        android:textColor="#000000" />
+</LinearLayout>
 <!--<TextView-->
     <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
     <!--android:layout_width="64dp"-->
@@ -9,14 +29,10 @@
     <!--android:textStyle="bold"-->
     <!--android:visibility="invisible"-->
     <!--android:background="@drawable/phone2"/>-->
-<ImageView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="64dp"
-    android:layout_height="64dp"
-    android:id="@+id/foundDevice"
-    android:layout_above="@id/centerImage"
-    android:layout_marginBottom="32dp"
-    android:layout_toLeftOf="@id/centerImage"
-    android:layout_marginRight="6dp"
-    android:src="@drawable/phone2"
-    android:visibility="invisible"/>
+<!--<ImageView-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:src="@drawable/phone2"-->
+    <!--android:visibility="invisible"-->
+    <!--android:contentDescription="TODO" />-->
