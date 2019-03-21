@@ -6,46 +6,62 @@ import android.animation.ObjectAnimator;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.skyfishjy.library.RippleBackground;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class mainpage_ui_test extends AppCompatActivity {
+public class mainpage_ui_test extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView foundDevice;
     static int count = 0;
+    RippleBackground rippleBackground;
+    ArrayList<Integer> device_ids = new ArrayList<>();
+    ArrayList<TextView> device_txt_view = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainpage_ui_test);
 
-        final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
+        rippleBackground=(RippleBackground)findViewById(R.id.content);
 
         final Handler handler=new Handler();
 
-        final View device1 = LayoutInflater.from(this).inflate(R.layout.device_icon, null);
-        RippleBackground.LayoutParams params = new RippleBackground.LayoutParams(400,400);
-        params.setMargins((int)(Math.random() * 800), (int)(Math.random() * 1000), 0, 0);
-        device1.setLayoutParams(params);
-        TextView txt_device1 = device1.findViewById(R.id.myImageViewText);
-        txt_device1.setText("new hjghj bjk device1");
-        rippleBackground.addView(device1);
+//        final View device1 = LayoutInflater.from(this).inflate(R.layout.device_icon, null);
+//        RippleBackground.LayoutParams params = new RippleBackground.LayoutParams(400,400);
+//        params.setMargins((int)(Math.random() * 800), (int)(Math.random() * 1000), 0, 0);
+//        device1.setLayoutParams(params);
+//        TextView txt_device1 = device1.findViewById(R.id.myImageViewText);
+//        txt_device1.setText("new hjghj bjk device1");
+//        rippleBackground.addView(device1);
+//        device1.setId((int)System.currentTimeMillis()+(int)Math.random()*50);
+//        device1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+//
+//        final View device2 = LayoutInflater.from(this).inflate(R.layout.device_icon, null);
+//        params = new RippleBackground.LayoutParams(400,400);
+//        params.setMargins((int)(Math.random() * 800), (int)(Math.random() * 1000), 0,0);
+//        device2.setLayoutParams(params);
+//        TextView txt_device2 = device2.findViewById(R.id.myImageViewText);
+//        txt_device2.setText("new hjghj bjk device2 njjk njknk njklnk");
+//        rippleBackground.addView(device2);
 
-        final View device2 = LayoutInflater.from(this).inflate(R.layout.device_icon, null);
-        params = new RippleBackground.LayoutParams(400,400);
-        params.setMargins((int)(Math.random() * 800), (int)(Math.random() * 1000), 0,0);
-        device2.setLayoutParams(params);
-        TextView txt_device2 = device2.findViewById(R.id.myImageViewText);
-        txt_device2.setText("new hjghj bjk device2 njjk njknk njklnk");
-        rippleBackground.addView(device2);
+        View device1 = createNewDevice();
+        View device2 = createNewDevice();
 
 //        final TextView device1 = new TextView(this);
 //        RippleBackground.LayoutParams params = new RippleBackground.LayoutParams(180,180);
@@ -84,6 +100,25 @@ public class mainpage_ui_test extends AppCompatActivity {
         });
     }
 
+    public View createNewDevice(){
+        View device1 = LayoutInflater.from(this).inflate(R.layout.device_icon, null);
+        RippleBackground.LayoutParams params = new RippleBackground.LayoutParams(400,400);
+        params.setMargins((int)(Math.random() * 1000), (int)(Math.random() * 1000), 0, 0);
+        device1.setLayoutParams(params);
+
+        TextView txt_device1 = device1.findViewById(R.id.myImageViewText);
+        int device_id = (int)(Math.random()*1000);
+        txt_device1.setText(device_id+"");
+        device1.setId(device_id);
+        device1.setOnClickListener(this);
+
+        rippleBackground.addView(device1);
+
+        device_txt_view.add(txt_device1);
+        device_ids.add(device_id);
+        return device1;
+    }
+
     private void foundDevice(View foundDevice){
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(400);
@@ -96,5 +131,14 @@ public class mainpage_ui_test extends AppCompatActivity {
         animatorSet.playTogether(animatorList);
         foundDevice.setVisibility(View.VISIBLE);
         animatorSet.start();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int view_id = v.getId();
+        if(device_ids.contains(view_id)){
+            int idx = device_ids.indexOf(view_id);
+            Toast.makeText(getApplicationContext(), idx+" Clicked", Toast.LENGTH_SHORT).show();
+        }
     }
 }
