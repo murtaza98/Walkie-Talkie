@@ -70,6 +70,7 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
                     }
 
                     // stop animation
+                    rippleBackground.clearAnimation();
                     rippleBackground.stopRippleAnimation();
                 }
 

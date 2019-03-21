@@ -1,6 +1,9 @@
 package com.example.murtaza.walkietalkie;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,22 +18,29 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.skyfishjy.library.RippleBackground;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -45,10 +55,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 2;
     private static final int MY_PERMISSIONS_REQUEST_REQUIRED_PERMISSION = 3;
 
-    //TODO ADD code to ask for permission
+    private static int device_count = 0;
 
-    Button btnDiscover;
-    ListView listView;
+    RippleBackground rippleBackground;
+    ArrayList<Integer> device_ids = new ArrayList<>();
+    ImageView centerDeviceIcon;
+
+
+//    Button btnDiscover;
+//    ListView listView;
     TextView connectionStatus;
 
     WifiManager wifiManager;
@@ -63,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     List<WifiP2pDevice> peers = new ArrayList<>();
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
-
-    static final int MESSAGE_READ = 1;
 
     ServerClass serverClass;
     ClientClass clientClass;
@@ -154,12 +167,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initialSetup() {
         // layout files
-        btnDiscover = (Button) findViewById(R.id.discover);
-        listView = (ListView) findViewById(R.id.peerListView);
+//        btnDiscover = (Button) findViewById(R.id.discover);
+//        listView = (ListView) findViewById(R.id.peerListView);
         connectionStatus = (TextView) findViewById(R.id.connectionStatus);
-
+        rippleBackground = (RippleBackground)findViewById(R.id.content);
+        centerDeviceIcon = (ImageView)findViewById(R.id.centerImage);
         // add onClick Listeners
-        btnDiscover.setOnClickListener(this);
+        centerDeviceIcon.setOnClickListener(this);
+//        btnDiscover.setOnClickListener(this);
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -175,26 +190,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void executeListeners() {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final WifiP2pDevice device = deviceArray[position];
-                WifiP2pConfig config = new WifiP2pConfig();
-                config.deviceAddress = device.deviceAddress;
-
-                mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(getApplicationContext(), "Connected to "+device.deviceName, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(int reason) {
-                        Toast.makeText(getApplicationContext(), "Error in connecting to "+device.deviceName, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                final WifiP2pDevice device = deviceArray[position];
+//                WifiP2pConfig config = new WifiP2pConfig();
+//                config.deviceAddress = device.deviceAddress;
+//
+//                mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+//                    @Override
+//                    public void onSuccess() {
+//                        Toast.makeText(getApplicationContext(), "Connected to "+device.deviceName, Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(int reason) {
+//                        Toast.makeText(getApplicationContext(), "Error in connecting to "+device.deviceName, Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        });
     }
 
     void checkLocationEnabled(){
@@ -228,11 +243,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.discover:
-                checkLocationEnabled();
-                discoverDevices();
-                break;
+        int view_id = v.getId();
+        if(device_ids.contains(view_id)){
+            int idx = device_ids.indexOf(view_id);
+            final WifiP2pDevice device = deviceArray[idx];
+                WifiP2pConfig config = new WifiP2pConfig();
+                config.deviceAddress = device.deviceAddress;
+
+                mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getApplicationContext(), "Connected to "+device.deviceName, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(int reason) {
+                        Toast.makeText(getApplicationContext(), "Error in connecting to "+device.deviceName, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            Toast.makeText(getApplicationContext(), idx+" Clicked", Toast.LENGTH_SHORT).show();
+        }else{
+            switch (v.getId()){
+              case R.id.centerImage:
+                  rippleBackground.startRippleAnimation();
+                  checkLocationEnabled();
+                  discoverDevices();
+                  break;
+               default:
+                  break;
+            }
         }
     }
 
@@ -255,7 +294,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onPeersAvailable(WifiP2pDeviceList peersList) {
             Log.d("DEVICE_NAME", "Listener called"+peersList.getDeviceList().size());
             if(!peersList.getDeviceList().equals(peers)){
-                peers.clear();
+                // clear previous views
+                clear_all_device_icons();
+
                 peers.addAll(peersList.getDeviceList());
 
                 deviceNameArray = new String[peersList.getDeviceList().size()];
@@ -263,14 +304,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 int index=0;
                 for(WifiP2pDevice device : peersList.getDeviceList()){
+                    View tmp_device = createNewDevice(device.deviceName);
+                    rippleBackground.addView(tmp_device);
+                    foundDevice(tmp_device);
                     deviceNameArray[index] = device.deviceName;
-                    Log.d("DEVICE_NAME", device.deviceName);
                     deviceArray[index] = device;
                     index++;
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, deviceNameArray);
-                listView.setAdapter(adapter);
+//                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, deviceNameArray);
+//                listView.setAdapter(adapter);
             }
 
             if(peers.size() == 0){
@@ -278,6 +321,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
+
+    void clear_all_device_icons(){
+        if(!device_ids.isEmpty()){
+            for(int id:device_ids){
+                rippleBackground.removeView(findViewById(id));
+            }
+        }
+        peers.clear();
+        device_ids.clear();
+    }
 
     WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
         @Override
@@ -295,6 +348,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
+
+    public View createNewDevice(String device_name){
+        View device1 = LayoutInflater.from(this).inflate(R.layout.device_icon, null);
+        RippleBackground.LayoutParams params = new RippleBackground.LayoutParams(350,350);
+        params.setMargins((int)(Math.random() * 400), (int)(Math.random() * 1000 + 200), 0, 0);
+        device1.setLayoutParams(params);
+
+        TextView txt_device1 = device1.findViewById(R.id.myImageViewText);
+        int device_id = (int)System.currentTimeMillis() + device_count++;
+        txt_device1.setText(device_name);
+        device1.setId(device_id);
+        device1.setOnClickListener(this);
+
+        device1.setVisibility(View.INVISIBLE);
+        device_ids.add(device_id);
+        return device1;
+    }
+
+    private void foundDevice(View foundDevice){
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(400);
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        ArrayList<Animator> animatorList=new ArrayList<Animator>();
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(foundDevice, "ScaleX", 0f, 1.2f, 1f);
+        animatorList.add(scaleXAnimator);
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(foundDevice, "ScaleY", 0f, 1.2f, 1f);
+        animatorList.add(scaleYAnimator);
+        animatorSet.playTogether(animatorList);
+        foundDevice.setVisibility(View.VISIBLE);
+        animatorSet.start();
+    }
 
     private void toggleWifiState() {
         if(wifiManager.isWifiEnabled()){

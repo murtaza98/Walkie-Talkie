@@ -6,6 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <com.skyfishjy.library.RippleBackground
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/content"
+        app:rb_color="#0099CC"
+        app:rb_radius="32dp"
+        app:rb_rippleAmount="6"
+        app:rb_duration="3000"
+        app:rb_scale="6">
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/centerImage"
+            android:src="@drawable/phone1"/>
+    </com.skyfishjy.library.RippleBackground>
+
     <TextView
         android:id="@+id/connectionStatus"
         android:layout_width="match_parent"
@@ -26,49 +45,35 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!--<Button-->
-        <!--android:id="@+id/onOff"-->
+        <!--android:id="@+id/discover"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_marginStart="50dp"-->
-        <!--android:layout_marginLeft="50dp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginLeft="8dp"-->
         <!--android:layout_marginTop="8dp"-->
-        <!--android:text="Wifi On"-->
+        <!--android:layout_marginEnd="50dp"-->
+        <!--android:layout_marginRight="50dp"-->
+        <!--android:text="discover"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
         <!--app:layout_constraintStart_toStartOf="parent"-->
         <!--app:layout_constraintTop_toBottomOf="@+id/connectionStatus" />-->
 
-    <Button
-        android:id="@+id/discover"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginRight="50dp"
-        android:text="discover"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connectionStatus" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/discover">
-        <ListView
-            android:id="@+id/peerListView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/discover"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/holo_blue_dark"
-            app:layout_constraintTop_toBottomOf="@+id/discover" />
-    </LinearLayout>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/discover">-->
+        <!--<ListView-->
+            <!--android:id="@+id/peerListView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/discover"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:background="@android:color/holo_blue_dark"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/discover" />-->
+    <!--</LinearLayout>-->
 
 
     <!--<TextView-->
