@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
@@ -26,6 +27,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,9 +53,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "MainActivity";
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
     private static final int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 2;
     private static final int MY_PERMISSIONS_REQUEST_REQUIRED_PERMISSION = 3;
+    private static final int SEPRATION_DIST_THRESHOLD = 50;
 
     private static int device_count = 0;
 
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<Integer> device_ids = new ArrayList<>();
     ImageView centerDeviceIcon;
 
+    ArrayList<Point> device_points = new ArrayList<>();
 
 //    Button btnDiscover;
 //    ListView listView;
@@ -175,6 +180,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // add onClick Listeners
         centerDeviceIcon.setOnClickListener(this);
 //        btnDiscover.setOnClickListener(this);
+
+        // center button position
+        Display display = getWindowManager(). getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        device_points.add(new Point(size.x / 2, size.y / 2));
+        Log.d("MainActivity", size.x + "  " + size.y);
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -349,10 +361,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
+    Point generateRandomPosition(){
+        Display display = getWindowManager(). getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int SCREEN_WIDTH = size.x;
+        int SCREEN_HEIGHT = size.y;
+
+        int height_start = SCREEN_HEIGHT / 2 - 300;
+        int x = 0;
+        int y = 0;
+
+        do{
+            x = (int)(Math.random() * SCREEN_WIDTH);
+            y = (int)(Math.random() * height_start);
+        }while(checkPositionOverlap(new Point(x, y)));
+
+        Point new_point = new Point(x, y);
+        device_points.add(new_point);
+
+        return new_point;
+
+    }
+
+    boolean checkPositionOverlap(Point new_p){
+    //  if overlap, then return true, else return false
+        if(!device_points.isEmpty()){
+            for(Point p:device_points){
+                int distance = (int)Math.sqrt(Math.pow(new_p.x - p.x, 2) + Math.pow(new_p.y - p.y, 2));
+                Log.d(TAG, distance+"");
+                if(distance < SEPRATION_DIST_THRESHOLD){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public View createNewDevice(String device_name){
         View device1 = LayoutInflater.from(this).inflate(R.layout.device_icon, null);
+        Point new_point = generateRandomPosition();
         RippleBackground.LayoutParams params = new RippleBackground.LayoutParams(350,350);
-        params.setMargins((int)(Math.random() * 400), (int)(Math.random() * 1000 + 200), 0, 0);
+        params.setMargins(new_point.x, new_point.y, 0, 0);
         device1.setLayoutParams(params);
 
         TextView txt_device1 = device1.findViewById(R.id.myImageViewText);
