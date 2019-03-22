@@ -62,13 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static int device_count = 0;
 
     RippleBackground rippleBackground;
-    ArrayList<Integer> device_ids = new ArrayList<>();
     ImageView centerDeviceIcon;
 
     ArrayList<Point> device_points = new ArrayList<>();
 
-//    Button btnDiscover;
-//    ListView listView;
     TextView connectionStatus;
 
     WifiManager wifiManager;
@@ -80,11 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     BroadcastReceiver mReceiver;
     IntentFilter mIntentFilter;
 
-    List<WifiP2pDevice> peers = new ArrayList<>();
-    String[] deviceNameArray;
-    WifiP2pDevice[] deviceArray;
     ArrayList<CustomDevice> custom_peers = new ArrayList<>();
-
 
     ServerClass serverClass;
     ClientClass clientClass;
@@ -97,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         getPermissions();
         initialSetup();
-        executeListeners();
-
     }
 
     @Override
@@ -174,14 +165,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initialSetup() {
         // layout files
-//        btnDiscover = (Button) findViewById(R.id.discover);
-//        listView = (ListView) findViewById(R.id.peerListView);
         connectionStatus = (TextView) findViewById(R.id.connectionStatus);
         rippleBackground = (RippleBackground)findViewById(R.id.content);
         centerDeviceIcon = (ImageView)findViewById(R.id.centerImage);
         // add onClick Listeners
         centerDeviceIcon.setOnClickListener(this);
-//        btnDiscover.setOnClickListener(this);
 
         // center button position
         Display display = getWindowManager(). getDefaultDisplay();
@@ -201,29 +189,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-    }
-
-    private void executeListeners() {
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                final WifiP2pDevice device = deviceArray[position];
-//                WifiP2pConfig config = new WifiP2pConfig();
-//                config.deviceAddress = device.deviceAddress;
-//
-//                mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
-//                    @Override
-//                    public void onSuccess() {
-//                        Toast.makeText(getApplicationContext(), "Connected to "+device.deviceName, Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    @Override
-//                    public void onFailure(int reason) {
-//                        Toast.makeText(getApplicationContext(), "Error in connecting to "+device.deviceName, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        });
     }
 
     void checkLocationEnabled(){
@@ -276,7 +241,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(getApplicationContext(), "Error in connecting to "+device.deviceName, Toast.LENGTH_SHORT).show();
                 }
             });
-            Toast.makeText(getApplicationContext(), idx+" Clicked", Toast.LENGTH_SHORT).show();
         }else{
             switch (v.getId()){
                 case R.id.centerImage:
@@ -288,36 +252,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
             }
         }
-
-//        if(device_ids.contains(view_id)){
-//            int idx = device_ids.indexOf(view_id);
-//            final WifiP2pDevice device = deviceArray[idx];
-//                WifiP2pConfig config = new WifiP2pConfig();
-//                config.deviceAddress = device.deviceAddress;
-//
-//                mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
-//                    @Override
-//                    public void onSuccess() {
-//                        Toast.makeText(getApplicationContext(), "Connected to "+device.deviceName, Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    @Override
-//                    public void onFailure(int reason) {
-//                        Toast.makeText(getApplicationContext(), "Error in connecting to "+device.deviceName, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            Toast.makeText(getApplicationContext(), idx+" Clicked", Toast.LENGTH_SHORT).show();
-//        }else{
-//            switch (v.getId()){
-//                case R.id.centerImage:
-//                    rippleBackground.startRippleAnimation();
-//                    checkLocationEnabled();
-//                    discoverDevices();
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
     }
 
     private int getIndexFromIdPeerList(int id){
@@ -356,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peersList) {
             Log.d("DEVICE_NAME", "Listener called"+peersList.getDeviceList().size());
-            if(!peersList.getDeviceList().equals(peers)){
+            if(peersList.getDeviceList().size() != 0){
 
                 // first make a list of all devices already present
                 ArrayList<CustomDevice> device_already_present = new ArrayList<>();
@@ -403,9 +337,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         custom_peers.add(tmp_device_obj);
                     }
                 }
-
-//                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, deviceNameArray);
-//                listView.setAdapter(adapter);
             }
 
             if(peersList.getDeviceList().size() == 0){
@@ -415,13 +346,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     void clear_all_device_icons(){
-        if(!device_ids.isEmpty()){
-            for(int id:device_ids){
-                rippleBackground.removeView(findViewById(id));
+        if(!custom_peers.isEmpty()){
+            for(CustomDevice d : custom_peers){
+                rippleBackground.removeView(findViewById(d.id));
             }
         }
-        peers.clear();
-        device_ids.clear();
     }
 
     WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
@@ -492,7 +421,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         device1.setOnClickListener(this);
 
         device1.setVisibility(View.INVISIBLE);
-        device_ids.add(device_id);
         return device1;
     }
 
