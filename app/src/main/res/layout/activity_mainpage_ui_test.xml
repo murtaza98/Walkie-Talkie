@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
+    tools:context=".mainpage_ui_test">
     <com.skyfishjy.library.RippleBackground
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -23,24 +22,16 @@
             android:layout_centerInParent="true"
             android:id="@+id/centerImage"
             android:src="@drawable/phone1"/>
+        <!--<ImageView-->
+            <!--android:layout_width="64dp"-->
+            <!--android:layout_height="64dp"-->
+            <!--android:id="@+id/foundDevice"-->
+            <!--android:layout_above="@id/centerImage"-->
+            <!--android:layout_marginBottom="32dp"-->
+            <!--android:layout_toLeftOf="@id/centerImage"-->
+            <!--android:layout_marginRight="6dp"-->
+            <!--android:src="@drawable/phone2"-->
+            <!--android:visibility="invisible"/>-->
     </com.skyfishjy.library.RippleBackground>
 
-    <TextView
-        android:id="@+id/connectionStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Connection Status"
-        android:textAlignment="center"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="18sp"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
