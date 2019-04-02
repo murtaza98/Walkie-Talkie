@@ -45,6 +45,7 @@ import android.widget.Toast;
 import com.skyfishjy.library.RippleBackground;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -111,12 +112,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public class ServerClass extends Thread{
         Socket socket;
-        ServerSocket serverSocket;
+        DatagramSocket serverSocket;
 
         @Override
         public void run() {
             try {
-                serverSocket = new ServerSocket(PORT_USED);
+                serverSocket = new DatagramSocket(PORT_USED);
                 socket = serverSocket.accept();
 
                 SocketHandler.setSocket(socket);
