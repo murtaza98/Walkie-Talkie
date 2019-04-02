@@ -12,6 +12,8 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 
 public class AudioStreamingService extends Service {
     private static final int SAMPLE_RATE = 16000;
@@ -70,15 +72,26 @@ public class AudioStreamingService extends Service {
                 int offset = 0;
 
                 try {
-                    InputStream inputStream = SocketHandler.getSocket().getInputStream();
-                    int bytes_read = inputStream.read(buffer, 0, bufferSize);
+                    DatagramSocket socket = SocketHandler.getSocket();
+
+//                    DatagramPacket dp = new DatagramPacket()
+
+//                    InputStream inputStream = SocketHandler.getSocket().getInputStream();
+
+                    DatagramPacket dp = new DatagramPacket(buffer, bufferSize);
+
+                    socket.receive(dp);
+
+                    int bytes_read = dp.getLength();
 
                     while(keepPlaying && (bytes_read != -1)) {
+                        buffer = dp.getData();
                         audioTrack.write(buffer, 0,buffer.length);
-                        bytes_read = inputStream.read(buffer, 0, bufferSize);
+
+                        socket.receive(dp);
+                        bytes_read = dp.getLength();
                     }
 
-                    inputStream.close();
                     audioTrack.release();
                 } catch (IOException e) {
                     e.printStackTrace();

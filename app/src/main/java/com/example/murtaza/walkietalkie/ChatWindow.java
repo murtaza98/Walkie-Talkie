@@ -20,7 +20,6 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
     private static boolean isRecording = false;
     private RippleBackground rippleBackground;
     private MicRecorder micRecorder;
-    OutputStream outputStream;
     Thread t;
 
     @Override
@@ -33,17 +32,11 @@ public class ChatWindow extends AppCompatActivity implements View.OnClickListene
 
         rippleBackground = (RippleBackground) findViewById(R.id.content);
 
-        Socket socket = SocketHandler.getSocket();
 
-        try {
-            outputStream = socket.getOutputStream();
-            Log.e("OUTPUT_SOCKET", "SUCCESS");
-            startService(new Intent(getApplicationContext(), AudioStreamingService.class));
+        Log.e("OUTPUT_SOCKET", "SUCCESS");
+        startService(new Intent(getApplicationContext(), AudioStreamingService.class));
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

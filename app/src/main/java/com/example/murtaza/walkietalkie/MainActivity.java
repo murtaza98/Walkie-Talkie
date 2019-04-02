@@ -50,6 +50,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Menu menu;
 
+    static boolean is_Server;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate  (savedInstanceState);
@@ -111,16 +115,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public class ServerClass extends Thread{
-        Socket socket;
+//        Socket socket;
         DatagramSocket serverSocket;
 
         @Override
         public void run() {
             try {
                 serverSocket = new DatagramSocket(PORT_USED);
-                socket = serverSocket.accept();
+//                socket = serverSocket.accept();
 
-                SocketHandler.setSocket(socket);
+                SocketHandler.setSocket(serverSocket);
+
 
                 startActivity(new Intent(getApplicationContext(), ChatWindow.class));
             } catch (IOException e) {
@@ -130,23 +135,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public class ClientClass extends Thread{
-        Socket socket;
+//        Socket socket;
+        DatagramSocket socket;
         String hostAddress;
+        InetAddress inetAddress;
 
         ClientClass(InetAddress address){
-            this.socket = new Socket();
+            try {
+                this.socket = new DatagramSocket();
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+            this.inetAddress = address;
             this.hostAddress = address.getHostAddress();
         }
 
         @Override
         public void run() {
             try {
-                socket.connect(new InetSocketAddress(hostAddress, PORT_USED), 500);
+                socket.connect(inetAddress, PORT_USED);
+//                socket.connect(new InetSocketAddress(hostAddress, PORT_USED), 500);
 
                 SocketHandler.setSocket(socket);
+                SocketHandler.setPORT(PORT_USED);
+                SocketHandler.setInetAddress(inetAddress);
+
+
 
                 startActivity(new Intent(getApplicationContext(), ChatWindow.class));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -234,6 +251,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
                 @Override
                 public void onSuccess() {
+                    if(is_Server){
+                        Log.e(TAG,"MAIN DEVICE ADDRESS" + device.deviceAddress);
+                        SocketHandler.setPORT(PORT_USED);
+                        try {
+                            SocketHandler.setInetAddress(InetAddress.getByName(device.deviceAddress));
+                        } catch (UnknownHostException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                     Toast.makeText(getApplicationContext(), "Connected to "+device.deviceName, Toast.LENGTH_SHORT).show();
                 }
 
@@ -363,10 +390,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 connectionStatus.setText("HOST");
                 serverClass = new ServerClass();
                 serverClass.start();
+                is_Server = true;
             }else if(info.groupFormed){
                 connectionStatus.setText("CLIENT");
                 clientClass = new ClientClass(groupOwnerAddress);
                 clientClass.start();
+                is_Server = false;
             }
         }
     };

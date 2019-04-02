@@ -7,6 +7,9 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 public class MicRecorder implements Runnable {
     private static final int SAMPLE_RATE = 16000;
@@ -27,8 +30,6 @@ public class MicRecorder implements Runnable {
         }
 
         try {
-            final OutputStream outputStream = SocketHandler.getSocket().getOutputStream();
-
             final byte[] audioBuffer = new byte[bufferSize];
 
             AudioRecord record = new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION,
@@ -44,15 +45,24 @@ public class MicRecorder implements Runnable {
             record.startRecording();
             Log.e("AUDIO", "STARTED RECORDING");
 
+            final DatagramSocket socket = SocketHandler.getSocket();
+            final InetAddress inetAddress = SocketHandler.getInetAddress();
+            final int port = SocketHandler.getPORT();
+
             while(keepRecording) {
                 int numberOfBytes = record.read(audioBuffer, 0, audioBuffer.length);
                 Runnable writeToOutputStream = new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            outputStream.write(audioBuffer);
-                            outputStream.flush();
-                        } catch (IOException e) {
+                            DatagramPacket dp = new DatagramPacket(
+                                    audioBuffer,
+                                    audioBuffer.length,
+                                    inetAddress,
+                                    port
+                                    );
+                            socket.send(dp);
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -65,7 +75,7 @@ public class MicRecorder implements Runnable {
             record.release();
 //            outputStream.close();
             Log.e("AUDIO", "Streaming stopped");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
