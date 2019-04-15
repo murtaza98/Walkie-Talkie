@@ -29,6 +29,8 @@ public class MicRecorder implements Runnable {
             bufferSize = SAMPLE_RATE * 2;
         }
 
+        bufferSize = 1000;
+
         try {
             final byte[] audioBuffer = new byte[bufferSize];
 

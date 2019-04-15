@@ -54,6 +54,8 @@ public class AudioStreamingService extends Service {
                     bufferSize = SAMPLE_RATE * 2;
                 }
 
+                bufferSize = 1000;
+
                 Log.d("PLAY", "buffersize = "+bufferSize);
 
                  audioTrack = new AudioTrack(
