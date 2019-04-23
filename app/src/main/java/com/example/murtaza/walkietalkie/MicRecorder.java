@@ -30,6 +30,8 @@ public class MicRecorder implements Runnable {
         int bufferSize = 1280;
         Log.e("AUDIO", "buffersize = "+bufferSize);
 
+        bufferSize = 1000;
+
         try {
             final byte[] audioBuffer = new byte[bufferSize];
 
