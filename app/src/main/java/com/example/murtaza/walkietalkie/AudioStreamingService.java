@@ -48,13 +48,15 @@ public class AudioStreamingService extends Service {
         Runnable audioPlayerRunnable = new Runnable() {
             @Override
             public void run() {
-                int bufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO,
+                /*int bufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO,
                         AudioFormat.ENCODING_PCM_16BIT);
                 if (bufferSize == AudioTrack.ERROR || bufferSize == AudioTrack.ERROR_BAD_VALUE) {
                     bufferSize = SAMPLE_RATE * 2;
-                }
+                }*/
 
+                int bufferSize = 1280;
                 Log.d("PLAY", "buffersize = "+bufferSize);
+
 
                  audioTrack = new AudioTrack(
                         AudioManager.STREAM_MUSIC,

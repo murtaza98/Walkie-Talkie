@@ -19,15 +19,16 @@ public class MicRecorder implements Runnable {
     public void run() {
         android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
 
-        int bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE,
+        /*int bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE,
                 AudioFormat.CHANNEL_IN_MONO,
-                AudioFormat.ENCODING_PCM_16BIT);
+                AudioFormat.ENCODING_PCM_16BIT);*/
 
-        Log.e("AUDIO", "buffersize = "+bufferSize);
 
-        if (bufferSize == AudioRecord.ERROR || bufferSize == AudioRecord.ERROR_BAD_VALUE) {
+        /*if (bufferSize == AudioRecord.ERROR || bufferSize == AudioRecord.ERROR_BAD_VALUE) {
             bufferSize = SAMPLE_RATE * 2;
-        }
+        }*/
+        int bufferSize = 1280;
+        Log.e("AUDIO", "buffersize = "+bufferSize);
 
         try {
             final byte[] audioBuffer = new byte[bufferSize];
