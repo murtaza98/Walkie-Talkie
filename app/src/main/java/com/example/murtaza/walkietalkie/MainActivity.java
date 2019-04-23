@@ -251,12 +251,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
                 @Override
                 public void onSuccess() {
+                    Log.e(TAG, "onsuccess called");
                     if(is_Server){
-                        Log.e(TAG,"MAIN DEVICE ADDRESS" + device.deviceAddress);
+                        Log.e(TAG,"Server----MAIN DEVICE ADDRESS" + device.deviceAddress);
                         SocketHandler.setPORT(PORT_USED);
                         try {
                             SocketHandler.setInetAddress(InetAddress.getByName(device.deviceAddress));
+                            Log.e(TAG,"Server----Sockethandler" + InetAddress.getByName(device.deviceAddress));
                         } catch (UnknownHostException e) {
+                            Log.e(TAG, "Error"+e.getMessage());
                             e.printStackTrace();
                         }
                     }
@@ -385,17 +388,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
             final InetAddress groupOwnerAddress = info.groupOwnerAddress;
-
+            Log.d("address!", groupOwnerAddress.toString());
             if(info.groupFormed && info.isGroupOwner){
                 connectionStatus.setText("HOST");
+                is_Server = true;
                 serverClass = new ServerClass();
                 serverClass.start();
-                is_Server = true;
             }else if(info.groupFormed){
                 connectionStatus.setText("CLIENT");
+                is_Server = false;
                 clientClass = new ClientClass(groupOwnerAddress);
                 clientClass.start();
-                is_Server = false;
             }
         }
     };
