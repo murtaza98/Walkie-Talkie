@@ -46,3 +46,6 @@ output.json
 #NDK
 obj/
 .externalNativeBuild
+
+.project
+.settings/
